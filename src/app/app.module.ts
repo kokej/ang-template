@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -6,6 +7,9 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './service/auth-guard.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngMatModule } from './common/ang-mat/ang-mat.module';
+import { LoginModule } from './login/login.module';
+import { HomeComponent } from './public/home/home.component';
 
 const firebase = {
     apiKey: 'AIzaSyB7UK6myQ46umsRa0WdQHBR0RqRyjxVEwo',
@@ -17,8 +21,16 @@ const firebase = {
 };
 
 @NgModule({
-    declarations: [ AppComponent ],
-    imports: [ BrowserModule, AppRoutingModule, AngularFireModule.initializeApp(firebase), AngularFireAuthModule ],
+    declarations: [ AppComponent, HomeComponent ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AngMatModule,
+        LoginModule,
+        AppRoutingModule,
+        AngularFireModule.initializeApp(firebase),
+        AngularFireAuthModule
+    ],
     providers: [ AuthGuard ],
     bootstrap: [ AppComponent ]
 })

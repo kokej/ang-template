@@ -1,1 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@font-face {
+    font-family: hipster;
+    src: url(./assets/fonts/HipsterishFontNormal.ttf);
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+nav,
+footer {
+    display: flex;
+    font-family: "hipster";
+    font-weight: 300;
+    font-size: 20px;
+    background-color: #f2f2f2;
+    color: #555;
+
+    -webkit-font-smoothing: antialiased;
+    -webkit-overflow-scrolling: touch;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.login-wrapper {
+    form {
+        display: flex;
+        flex-direction: column;
+        .user-form-buttons {
+            align-self: flex-end;
+            button {
+                margin: 0 .5em;
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}

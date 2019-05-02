@@ -1,8 +1,20 @@
+<mat-card class="app-wrapper">
+<nav>
+    <span>
+        <img src="../assets/imgs/logo1.png" style="width: 10em" alt="">
+    </span>
+    <div class="nav-menu">
+        <button mat-button routerLink="">Home</button>
+        <button mat-button disabled routerLink="/private">Private</button>
+        <app-login mat-button></app-login>
+    </div>
+</nav>
 
-<button routerLink="">Home</button>
-<button routerLink="/private">Private</button>
-<button routerLink="/login">Login</button>
 
-<router-outlet></router-outlet>
 
-<p>more testing</p>
+<router-outlet class="main-router"></router-outlet>
+
+<footer>
+    <button mat-button routerLink="about">About</button>
+</footer>
+</mat-card>
