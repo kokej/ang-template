@@ -6,13 +6,21 @@
     max-width: 1000px;
     margin: auto;
     .app-wrapper {
+        position: relative;
         min-height: 100%;
+        padding: 0;
+        .spinner-wrapper {
+            position: absolute;
+            bottom: 3em;
+            right: 1em;
+        }
     }
     nav {
         display: flex;
         width: 100%;
-        span {
+        span.app-logo {
             margin: auto;
+            cursor: pointer;
         }
         .nav-menu {
             display: flex;
@@ -20,6 +28,7 @@
             justify-content: flex-end;
             width: 100%;
             button {
+                cursor: pointer;
                 &:first-child {
                     padding-left: 0;
                 }

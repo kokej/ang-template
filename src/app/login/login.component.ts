@@ -1,6 +1,10 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
-import { AuthenticationService } from '../service/authentication.service';
+import { AuthenticationService } from './service/authentication.service';
 import { UserFormType } from './UserFormType';
+import { Store, select } from '@ngrx/store';
+import { ResetUser } from '../store/user/user.actions';
+import { SendMessage } from '../store/messaging/messaging.actions';
+import { SetLoadingStatus } from '../store/loading/loading.actions';
 
 @Component({
     selector: 'app-login',
@@ -8,6 +12,7 @@ import { UserFormType } from './UserFormType';
     styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent {
+    user$;
     responseMessage = '';
     responseMessageType = '';
     userFormData: UserFormType;
@@ -15,8 +20,15 @@ export class LoginComponent {
     userDetails: any;
     showLogin: boolean;
 
-    constructor(private authService: AuthenticationService, private elementRef: ElementRef) {
+    constructor(
+        private store: Store<{ user: any }>,
+        private authService: AuthenticationService,
+        private elementRef: ElementRef
+    ) {
         this.isForgotPassword = false;
+        this.user$ = store.pipe(select('user')).subscribe((data) => {
+            this.userDetails = data;
+        });
     }
     @HostListener('document:mousedown', [ '$event' ])
     onGlobalClick(event): void {
@@ -26,97 +38,110 @@ export class LoginComponent {
         }
     }
 
-    // Comman Method to Show Message and Hide after 2 seconds
-    showMessage(type, msg) {
-        this.responseMessageType = type;
-        this.responseMessage = msg;
-        setTimeout(() => {
-            this.responseMessage = '';
-        }, 2000);
-    }
-
-    // Check localStorage is having User Data
-    isUserLoggedIn() {
-        this.userDetails = this.authService.isUserLoggedIn();
-        console.log(this.userDetails);
-    }
-
     // SignOut Firebase Session and Clean LocalStorage
     logoutUser() {
+        this.store.dispatch(new SetLoadingStatus(true));
         this.authService.logout().then(
             (res) => {
                 this.userDetails = undefined;
-                localStorage.removeItem('user');
+                this.store.dispatch(new ResetUser());
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'success', text: 'User succesfully logout' }));
             },
             (err) => {
-                this.showMessage('danger', err.message);
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
             }
         );
     }
 
     // Send link on given email to reset password
     forgotPassword() {
+        this.store.dispatch(new SetLoadingStatus(true));
         this.authService.sendPasswordResetEmail(this.userFormData.user.email).then(
             (res) => {
                 this.isForgotPassword = false;
-                this.showMessage('success', 'Please Check Your Email');
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'success', text: 'Please Check Your Email' }));
+                // this.showMessage('success', 'Please Check Your Email');
             },
             (err) => {
-                this.showMessage('danger', err.message);
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
+                // this.showMessage('danger', err.message);
             }
         );
     }
 
     // Open Popup to Login with Google Account
     googleLogin() {
+        this.store.dispatch(new SetLoadingStatus(true));
         this.authService.loginWithGoogle().then(
             (res) => {
-                this.showMessage('success', 'Successfully Logged In with Google');
-                this.isUserLoggedIn();
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'success', text: 'Successfully Logged In with Google' }));
+                // this.showMessage('success', 'Successfully Logged In with Google');
             },
             (err) => {
-                this.showMessage('danger', err.message);
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
+                // this.showMessage('danger', err.message);
             }
         );
     }
 
     // Login user with  provided Email/ Password
     loginUser() {
+        this.store.dispatch(new SetLoadingStatus(true));
         this.responseMessage = '';
         this.authService.login(this.userFormData.user.email, this.userFormData.user.password).then(
             (res) => {
-                this.showMessage('success', 'Successfully Logged In!');
-                this.isUserLoggedIn();
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'success', text: 'Successfully Logged In!' }));
+                // this.showMessage('success', 'Successfully Logged In!');
             },
             (err) => {
-                this.showMessage('danger', err.message);
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
+                // this.showMessage('danger', err.message);
             }
         );
     }
 
     // Register user with  provided Email/ Password
     registerUser() {
+        this.store.dispatch(new SetLoadingStatus(true));
         this.authService.register(this.userFormData.user.email, this.userFormData.user.password).then(
             (res) => {
                 // Send Varification link in email
                 this.authService.sendEmailVerification().then(
                     (res) => {
                         this.isForgotPassword = false;
-                        this.showMessage('success', 'Registration Successful! Please Verify Your Email');
+                        this.store.dispatch(new SetLoadingStatus(false));
+                        this.store.dispatch(
+                            new SendMessage({
+                                type: 'success',
+                                text: 'Registration Successful! Please Verify Your Email'
+                            })
+                        );
+                        // this.showMessage('success', 'Registration Successful! Please Verify Your Email');
                     },
                     (err) => {
-                        this.showMessage('danger', err.message);
+                        this.store.dispatch(new SetLoadingStatus(false));
+                        this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
+                        // this.showMessage('danger', err.message);
                     }
                 );
-                this.isUserLoggedIn();
             },
             (err) => {
-                this.showMessage('danger', err.message);
+                this.store.dispatch(new SetLoadingStatus(false));
+                this.store.dispatch(new SendMessage({ type: 'danger', text: err.message }));
+                // this.showMessage('danger', err.message);
             }
         );
     }
     handleData(data) {
-        this.showMessage('', '');
+        // this.showMessage('', '');
         this.userFormData = data;
         if (this.userFormData.loginProvider) {
             return this.googleLogin();

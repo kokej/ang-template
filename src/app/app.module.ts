@@ -4,12 +4,17 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthGuard } from './service/auth-guard.service';
+import { AuthGuard } from './auth-guard.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngMatModule } from './common/ang-mat/ang-mat.module';
 import { LoginModule } from './login/login.module';
 import { HomeComponent } from './public/home/home.component';
+
+import { StoreModule } from '@ngrx/store';
+import { userReducer } from './store/user/user.reducer';
+import { messagingReducer } from './store/messaging/messaging.reducer';
+import { loadingReducer } from './store/loading/loading.reducer';
 
 const firebase = {
     apiKey: 'AIzaSyB7UK6myQ46umsRa0WdQHBR0RqRyjxVEwo',
@@ -29,7 +34,8 @@ const firebase = {
         LoginModule,
         AppRoutingModule,
         AngularFireModule.initializeApp(firebase),
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        StoreModule.forRoot({ user: userReducer, message: messagingReducer, loading: loadingReducer })
     ],
     providers: [ AuthGuard ],
     bootstrap: [ AppComponent ]

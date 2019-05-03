@@ -1,10 +1,6 @@
-<button mat-button (click)="showLogin = !showLogin">Login</button>
+<button mat-button (click)="showLogin = !showLogin">{{ userDetails ? userDetails.email : 'Login' }}</button>
 
 <mat-card class="login-wrapper" [class.visible]="showLogin">
-  <div class="alert alert-{{responseMessageType}}" role="alert"
-    *ngIf="responseMessage.length">
-    {{responseMessage}}
-  </div>
   <div class="login-header" *ngIf="!userDetails; else userData">
       <mat-tab-group >
           <mat-tab label="Login" isActive="true">
@@ -19,12 +15,20 @@
       </mat-tab-group>
   </div>
   <ng-template #userData>
-    <ul>
-      <li>name: {{userDetails.displayName || null}}</li>
-      <li>email: {{userDetails.email}}</li>
-    </ul>
-    <button type="button" class="btn btn-danger"
-      (click)="logoutUser()">Logout</button>
+    <mat-list role="list">
+      <mat-list-item role="listitem">
+        <p>name:</p>
+        <h4>{{userDetails.displayName || null}}</h4>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <p>email:</p>
+        <h4>{{userDetails.email}}</h4>
+      </mat-list-item>
+    </mat-list>
+    <div class="user-form-buttons">
+      <button mat-raised-button
+        (click)="logoutUser()">Logout</button>
+    </div>
   </ng-template>
 </mat-card>
 

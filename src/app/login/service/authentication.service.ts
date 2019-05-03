@@ -3,17 +3,30 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { SetUser, ResetUser } from '../../store/user/user.actions';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService {
-    constructor(public angularFireAuth: AngularFireAuth, public router: Router) {
-        this.angularFireAuth.authState.subscribe((userResponse) => {
+    public authState: Subscription = new Subscription();
+    constructor(
+        public angularFireAuth: AngularFireAuth,
+        public router: Router,
+        private store: Store<{ count: number }>
+    ) {
+        this.authState = this.angularFireAuth.authState.subscribe((userResponse) => {
             if (userResponse) {
-                localStorage.setItem('user', JSON.stringify(userResponse));
+                this.store.dispatch(
+                    new SetUser({
+                        displayName: userResponse.displayName,
+                        email: userResponse.email
+                    })
+                );
             } else {
-                localStorage.setItem('user', null);
+                this.store.dispatch(new ResetUser());
             }
         });
     }
@@ -36,11 +49,6 @@ export class AuthenticationService {
 
     async logout() {
         return await this.angularFireAuth.auth.signOut();
-    }
-
-    isUserLoggedIn() {
-        const temp = JSON.parse(localStorage.getItem('user'));
-        return temp;
     }
 
     async loginWithGoogle() {

@@ -1,20 +1,24 @@
 <mat-card class="app-wrapper">
-<nav>
-    <span>
-        <img src="../assets/imgs/logo1.png" style="width: 10em" alt="">
-    </span>
-    <div class="nav-menu">
-        <button mat-button routerLink="">Home</button>
-        <button mat-button disabled routerLink="/private">Private</button>
-        <app-login mat-button></app-login>
+    <nav>
+        <span class="app-logo">
+            <img routerLink="" src="../assets/imgs/logo1.png" style="width: 10em" alt="">
+        </span>
+        <div class="nav-menu">
+            <button mat-button routerLink="">Home</button>
+            <button mat-button [disabled]="!user" routerLink="/private">Private</button>
+            <app-login mat-button></app-login>
+        </div>
+    </nav>
+
+    <div class="spinner-wrapper" *ngIf="showSpinner">
+        <mat-spinner></mat-spinner>
     </div>
-</nav>
+    
+    <section class="main-router">
+        <router-outlet></router-outlet>
+    </section>
 
-
-
-<router-outlet class="main-router"></router-outlet>
-
-<footer>
-    <button mat-button routerLink="about">About</button>
-</footer>
+    <footer>
+        <button mat-button routerLink="about">About</button>
+    </footer>
 </mat-card>
