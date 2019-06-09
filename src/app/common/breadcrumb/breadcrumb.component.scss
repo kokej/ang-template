@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  align-items: center;
+  .breadcrumb {
+    display: flex;
+    .breadcrumb-item {
+      &:after {
+        content: '/';
+        margin: 0 0.5em;
+      }
+      &:last-child:after {
+        content: '';
+      }
+    }
+  }
+}

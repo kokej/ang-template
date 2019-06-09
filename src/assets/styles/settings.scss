@@ -1,0 +1,19 @@
+@font-face {
+  font-family: hipster;
+  src: url(./assets/fonts/HipsterishFontNormal.ttf);
+}
+
+@mixin background-opacity($color, $opacity: 0.3) {
+  background: $color;
+  background: rgba($color, $opacity);
+}
+
+$light-background-grey: #f2f2f2;
+$dark-font-grey: #555;
+$pink-logo: #edafd0;
+$green-logo: #b6d6be;
+$dark-grey-logo: #4e4e4d;
+$warning-red: #c03221;
+$success-green: #2db98a;
+$opacity-high: 0.95;
+$opacity-medium: 0.2;

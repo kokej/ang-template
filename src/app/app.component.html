@@ -6,14 +6,19 @@
         <div class="nav-menu">
             <button mat-button routerLink="">Home</button>
             <button mat-button [disabled]="!user" routerLink="/private">Private</button>
-            <app-login mat-button></app-login>
+            <button mat-button routerLink="/playground">Playground</button>
         </div>
     </nav>
+
+    <div class="sub-menu">
+        <app-breadcrumb></app-breadcrumb>
+        <app-login mat-button></app-login>
+    </div>
 
     <div class="spinner-wrapper" *ngIf="showSpinner">
         <mat-spinner></mat-spinner>
     </div>
-    
+
     <section class="main-router">
         <router-outlet></router-outlet>
     </section>
